@@ -1,0 +1,101 @@
+.red-color{
+    color: red;
+    font-weight: bold;
+}
+
+.black-color{
+    color: black;
+}
+.ndata{
+    display: flex;  
+    align-items: center;
+}
+
+.Subtitle{
+    background-color: #F3F3F3;
+    border-bottom: 3px;
+    border-top: 3px;
+    border-color: #C9C9C9;
+    font-size: 14px;
+    border-radius: 5px;
+    block-size: 30px;
+    display: flex;  
+    align-items: center;
+    writing-mode: horizontal-tb;
+
+}
+
+.custom-label{
+    font-size: 13px;    
+    color: #181818;     
+}
+
+.custom-textarea-fake {
+    min-height: 32px;
+    background: #fff;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    color: #181818;
+    resize: none;
+    border: none !important;
+    box-shadow: none !important;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.text-title-label{
+    font-size: 12px;
+    color: #444444;
+    margin: 0px 0px 0px;
+    padding:4px 0px 8px;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.sticky-header{
+    position: sticky;
+    top: 0;
+    background: #f3f6fb;
+    z-index: 2;
+}
+
+.headerTable{
+    background: #f3f6fb;
+    
+}
+.slds-modal__container {
+    width: auto !important;        
+    max-width: 1000px;              
+    padding: 0;
+}
+
+.slds-modal__content {
+    height: 600px;
+    max-width:  1000px; 
+    max-height: 60vh;       
+    overflow-y: auto;        
+}
+.scrollable.uiScrollerWrapper {
+    max-height: 200px;
+    overflow-y: auto;
+}
+.slds-table thead {
+    position:sticky;
+    top: 0;
+    width: 100%;
+    table-layout: fixed;
+    z-index: 2;
+}
+
+.sales-code-value{
+    word-break: break-all;     
+    overflow-wrap: break-word; 
+}
+
+.slds-table td {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}

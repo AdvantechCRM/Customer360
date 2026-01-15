@@ -1,0 +1,51 @@
+<template>
+  <lightning-modal-header label="Order Details"></lightning-modal-header>
+  <lightning-modal-body>
+
+    <div class="slds-card__body slds-card__body_inner">
+      <div class="innercard-title">
+        <h1>SO# : {passSONum}</h1>
+        <h1>PO# : {PONumber}</h1>
+        <h1>Order Date : {odrDate}</h1>
+        <h1>Sales Code : {sales_code__c}</h1>
+
+        <br />
+      </div>
+
+      <div class="scrollable uiScrollerWrapper">
+        <table id="order-table" class=" slds-table slds-table_cell-buffer slds-table_bordered" aria-label="arTable">
+          <thead>
+            <tr class="slds-line-height_reset">
+              <th>Line Item</th>
+              <th>Product Name</th>
+              <th>Order QTY</th>
+              <th>Net Price</th>
+              <th>Plant</th>
+              <th style="display: flex; align-items: center;">
+                First Date<span style="position:relative; top:-2px;"><lightning-helptext
+                    content="Cust. Request Date"></lightning-helptext></span>
+              </th>
+              <th>Shipment Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template for:each={sapOHDList} for:item="ohditem" for:index="index">
+              <tr key={ohditem.Id}>
+
+                <td>{ohditem.Line__c}</td>
+                <td>{ohditem.Product_Name__c}</td>
+                <td>{ohditem.Order_QTY__c}</td>
+                <td>{ohditem.Net_Price__c}</td>
+                <td>{ohditem.Pint__c}</td>
+                <td>{ohditem.First_Date__c}</td>
+                <td>{ohditem.Status__c}</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </lightning-modal-body>
+
+</template>

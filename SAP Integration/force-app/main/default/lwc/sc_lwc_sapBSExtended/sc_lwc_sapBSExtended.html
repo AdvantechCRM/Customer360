@@ -1,0 +1,80 @@
+<template>
+    <template if:true={isSModalOpen}>
+        <lightning-modal-header label="Shipment List"></lightning-modal-header>
+        <lightning-modal-body>
+            <div class="scrollable uiScrollerWrapper">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th>SO#</th>
+                            <th>PO#</th>
+                            <th>Effective Date</th>
+                            <th>Order Date</th>
+                            <th>Product</th>
+                            <th style="width: 100px;">Order QTY</th>
+                            <th style="width: 100px;">Bill QTY</th>
+                            <th>Amount</th>
+                            <th style="width: 100px;">Currency</th>
+                            <th>Sales Code</th>
+                        </tr>
+                    </thead>
+                    <tbody style="overflow-y: auto;">
+                        <template for:each={passSData} for:item="ohitem" for:index="index">
+                            <tr key={ohitem.Id}>
+                                <td>{ohitem.SO_Number__c}</td>
+                                <td>{ohitem.PO_Number__c}</td>
+                                <td>{ohitem.First_Date__c}</td>
+                                <td>{ohitem.Order_Date__c}</td>
+                                <td>{ohitem.Product_Name__c}</td>
+                                <td>{ohitem.Order_QTY__c}</td>
+                                <td>{ohitem.Bill_QTY__c}</td>
+                                <td>{ohitem.formattedAmount}</td>
+                                <td>{ohitem.CurrencyIsoCode}</td>
+                                <td>{ohitem.Sales_Code_Text__c}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </lightning-modal-body>
+    </template>
+    <template if:true={isBModalOpen}>
+        <lightning-modal-header label="Backlog List"></lightning-modal-header>
+        <lightning-modal-body>
+            <div class="scrollable uiScrollerWrapper">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th>SO#</th>
+                            <th>PO#</th>
+                            <th>Effective Date</th>
+                            <th>Order Date</th>
+                            <th>Product</th>
+                            <th style="width: 100px;">Order QTY</th>
+                            <th style="width: 100px;">Bill QTY</th>
+                            <th>Amount</th>
+                            <th style="width: 100px;">Currency</th>
+                            <th>Sales Code</th>
+                        </tr>
+                    </thead>
+                    <tbody style="overflow-y: auto;">
+                        <template for:each={passBData} for:item="ohitem" for:index="index">
+                            <tr key={ohitem.Id}>
+                                <td>{ohitem.SO_Number__c}</td>
+                                <td>{ohitem.PO_Number__c}</td>
+                                <td>{ohitem.First_Date__c}</td>
+                                <td>{ohitem.Order_Date__c}</td>
+                                <td>{ohitem.Product_Name__c}</td>
+                                <td>{ohitem.Order_QTY__c}</td>
+                                <td>{ohitem.Bill_QTY__c}</td>
+                                <td>{ohitem.formattedAmount}</td>
+                                <td>{ohitem.CurrencyIsoCode}</td>
+                                <td>{ohitem.Sales_Code_Text__c}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </lightning-modal-body>
+    </template>
+</template>

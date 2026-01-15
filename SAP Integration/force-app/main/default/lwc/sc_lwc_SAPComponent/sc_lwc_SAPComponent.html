@@ -1,0 +1,688 @@
+<template>
+    <div id="AccInfos" class="slds-m-bottom_large">
+        <div class="slds-card__header slds-grid">
+            <div class="slds-media slds-no-space slds-grow" style="align-items: center;">
+                <div class="slds-media__figure">
+                    <lightning-icon data-section="accinfo" onclick={toggleSection} icon-name={accinfoIconName}
+                        alternative-text="toggle" title="toggle" size="x-small"
+                        style="margin-left: 8px;margin-right: 8px;"></lightning-icon>
+                    <lightning-icon icon-name="custom:custom24" size="small" alternative-text="SAP Account Info"
+                        title="SAP Account Info"></lightning-icon>
+                    <span class="slds-assistive-text">SAP Account</span>
+                </div>
+                <div class="slds-media__body slds-align-middle">
+                    <h2 class="slds-card__header-title" style="margin: 0;">
+                        <span class="slds-truncate slds-m-right--xx-small" title="SAP Account Info">
+                            SAP Account Info
+                        </span>
+                    </h2>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <template if:true={isAccInfoShown}>
+                    <div style="margin-left: 16px;">
+                        <span style="color: #444444; font-size: 12px;">Last Updated Time: {formattedDateTime}</span>
+                    </div>
+                </template>
+                <lightning-button-icon icon-name="utility:refresh" size="small" variant="border-filled"
+                    alternative-text="Refresh" class="slds-m-left_small" title="Refresh" onclick={handleClick}>
+                </lightning-button-icon>
+            </div>
+        </div>
+        <template if:true={sectionsExpanded.accinfo}>
+            <div class="slds-p-left_medium">
+                <lightning-card variant="Narrow">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div if:true={isAccWait} class="slds-spinner_inline spinner-padding">
+                            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium">
+                            </lightning-spinner>
+                        </div>
+                        <div if:false={isAccWait}>
+                            <template lwc:if={erpID__c}>
+
+                                <template if:true={isAccInfoShown} for:each={sapAccountList} for:item="item">
+                                    <div key={item.Account_id}>
+
+                                        <div class="Subtitle"> <!--style="cursor:pointer;" onclick={toggleSection}> -->
+
+                                            <h1> <lightning-icon icon-name="utility:chevrondown"
+                                                    alternative-text="chevrondown" title="chevrondown" size="xx-small"
+                                                    style="margin-left: 8px;margin-right: 8px;"></lightning-icon>
+                                                <strong>Basic Information</strong>
+                                            </h1>
+                                        </div>
+
+                                        <ul class="slds-grid slds-wrap ">
+                                            <!--<div if:true={showSection}>-->
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <label style="display: flex; align-items: center;"
+                                                    class="slds-col slds-size_6-of-12">
+                                                    <span class="slds-form-element__label custom-label bold-text"
+                                                        style="margin-right: 0px;">
+                                                        ERP ID：
+                                                    </span>
+                                                    <span>{erpID__c}</span>
+                                                </label>
+                                            </ul>
+                                            <br />
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <label style="display: flex; align-items: center;"
+                                                    class="slds-col slds-size_6-of-12">
+                                                    <span class="slds-form-element__label custom-label bold-text"
+                                                        style="margin-right: 0px;">
+                                                        Account Name：
+                                                    </span>
+                                                    <span>{item.Name}</span>
+                                                </label>
+                                                <label style="display: flex; align-items: center;"
+                                                    class="slds-col slds-size_6-of-12">
+                                                    <span class="slds-form-element__label custom-label bold-text"
+                                                        style="margin-right: 0px;">
+                                                        Currency：
+                                                    </span>
+                                                    <span>{item.CurrencyIsoCode}</span>
+                                                </label>
+                                            </ul>
+                                            <br />
+                                            <br />
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <li class="slds-col slds-size_6-of-12">
+                                                    <div style="display: flex; align-items: center; flex-wrap: wrap;">
+                                                        <span class="slds-form-element__label custom-label bold-text"
+                                                            style="margin-right: 0px;">
+                                                            Matching Salesforce Sales Code<span
+                                                                style="position:relative; top:-4px;"><lightning-helptext
+                                                                    content="Get value from SAP's VE Number."></lightning-helptext></span>：
+                                                        </span>
+
+                                                        <span class="sales-code-value">{item.Sales_Code__c}</span>
+                                                    </div>
+                                                </li>
+                                                <li class="slds-col slds-size_6-of-12">
+                                                    <div style="display: flex; align-items: center; flex-wrap: wrap;">
+                                                        <span class="slds-form-element__label custom-label bold-text"
+                                                            style="margin-right: 0px;">
+                                                            Matching Secondary Salesforce Sales Code：
+                                                        </span>
+                                                        <span>{item.Secondary_Sales_Code__c}</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <br />
+                                            <br />
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <label style="display: flex; align-items: center;"
+                                                    class="slds-col slds-size_6-of-12">
+                                                    <span class="slds-form-element__label custom-label bold-text"
+                                                        style="margin-right: 0px;">
+                                                        Payment Terms：
+                                                    </span>
+                                                    <span>{item.Payment_Terms__c}</span>
+                                                </label>
+                                                <label
+                                                    class="slds-checkbox slds-checkbox_standalone slds-col slds-size_6-of-12"
+                                                    style="display: flex; align-items: center;">
+                                                    <span class="slds-form-element__label custom-label bold-text"
+                                                        style="margin-right: 0px;">Archiving
+                                                        Flags</span>
+                                                    <input type="checkbox" checked={item.Archiving_Flags__c} disabled />
+                                                    <span class="slds-checkbox_faux"></span>
+                                                </label>
+                                            </ul>
+
+                                            <br />
+                                            <br />
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <label style="display: flex; align-items: center;"
+                                                    class="slds-col slds-size_6-of-12">
+                                                    <span class="slds-form-element__label custom-label bold-text"
+                                                        style="margin-right: 0px;">
+                                                        Tax Number：
+                                                    </span>
+                                                    <span>{item.Tax_Number__c}</span>
+                                                </label>
+                                                <label
+                                                    class="slds-checkbox slds-checkbox_standalone slds-col slds-size_6-of-12"
+                                                    style="display: flex; align-items: center;">
+                                                    <span class="slds-form-element__label custom-label bold-text"
+                                                        style="margin-right: 0px;">Central
+                                                        Block</span>
+                                                    <input type="checkbox" checked={item.Central_Block__c} disabled />
+                                                    <span class="slds-checkbox_faux"></span>
+                                                </label>
+                                            </ul>
+                                            <br />
+                                            <br />
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <label style="display: flex; align-items: center;"
+                                                    class="slds-col slds-size_6-of-12">
+                                                    <span class="slds-form-element__label custom-label bold-text"
+                                                        style="margin-right: 0px;">
+                                                        Incoterms：
+                                                    </span>
+                                                    <span>{item.Incoterms__c}</span>
+                                                </label>
+                                                <label style="display: flex; align-items: center;"
+                                                    class="slds-col slds-size_6-of-12">
+                                                    <span class="slds-form-element__label custom-label bold-text"
+                                                        style="margin-right: 0px;">
+                                                        Vertical / Attribute 9：
+                                                    </span>
+                                                    <span>{item.Vertical__c}</span>
+                                                </label>
+                                            </ul>
+                                            <br />
+                                            <br />
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <label style="display: flex; align-items: center;"
+                                                    class="slds-col slds-size_6-of-12">
+                                                    <span class="slds-form-element__label custom-label bold-text"
+                                                        style="margin-right: 0px;">
+                                                        ERP ID Type：
+                                                    </span>
+                                                    <span>{item.ERP_ID_Type_Label}</span>
+                                                </label>
+                                            </ul>
+                                            <!--</div>-->
+                                            <br />
+                                            <br />
+                                            <div class="Subtitle slds-col slds-size_12-of-12">
+                                                <h1> <lightning-icon icon-name="utility:chevrondown"
+                                                        alternative-text="chevrondown" title="chevrondown"
+                                                        size="xx-small"
+                                                        style="margin-left: 8px;margin-right: 8px;"></lightning-icon>
+                                                    <strong>Credit Information</strong>
+                                                </h1>
+                                            </div>
+                                            <br />
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <li class="slds-col slds-size_6-of-12">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <span class="slds-form-element__label custom-label bold-text"
+                                                            style="margin-right: 0px;">
+                                                            Credit Limit<span
+                                                                style="position:relative; top:-4px;"><lightning-helptext
+                                                                    content="The maximum amount of money that Advantech is willing to extend as credit to a borrower."></lightning-helptext></span>：
+                                                        </span>
+
+                                                        <lightning-formatted-number value={item.Credit_Limit__c}
+                                                            maximum-fraction-digits="2"
+                                                            style="margin-left: 4px;"></lightning-formatted-number>
+                                                        <span
+                                                            style="margin-left: 4px;">{item.Credit_Exposure_Currency__c}</span>
+                                                    </div>
+                                                </li>
+                                                <li class="slds-col slds-size_6-of-12">
+                                                    <span class="slds-form-element__label custom-label bold-text"
+                                                        style="margin-right: 0px;">
+                                                        Credit Segment：</span>
+                                                    <span>{item.Credit_Segment__c}</span>
+                                                </li>
+                                            </ul>
+                                            <br />
+                                            <br />
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <li class="slds-col slds-size_6-of-12">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <span class="slds-form-element__label custom-label bold-text"
+                                                            style="margin-right: 0px;">
+                                                            Credit Exposure<span
+                                                                style="position:relative; top:-4px;"><lightning-helptext
+                                                                    content="The current amount owed to Advantech."></lightning-helptext></span>：
+                                                        </span>
+
+                                                        <lightning-formatted-number value={item.Credit_Exposure__c}
+                                                            maximum-fraction-digits="2"
+                                                            style="margin-left: 4px;"></lightning-formatted-number>
+                                                        <span
+                                                            style="margin-left: 4px;">{item.Credit_Exposure_Currency__c}</span>
+                                                    </div>
+                                                </li>
+                                                <li class="slds-col slds-size_6-of-12">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <span class="slds-form-element__label custom-label bold-text"
+                                                            style="margin-right: 0px;">
+                                                            Credit Limit Used<span
+                                                                style="position:relative; top:-4px;"><lightning-helptext
+                                                                    content="Credit Exposure/Credit Limit (%)"></lightning-helptext></span>：
+                                                        </span>
+
+                                                        <lightning-formatted-number value={item.Credit_Lim_Used__c}
+                                                            maximum-fraction-digits="2"
+                                                            style="margin-left: 4px;"></lightning-formatted-number>
+
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <br />
+                                            <br />
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <li class="slds-col slds-size_6-of-12">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <span class="slds-form-element__label custom-label bold-text"
+                                                            style="margin-right: 0px;">
+                                                            Credit Available：
+                                                        </span>
+                                                        <lightning-formatted-number value={item.Credit_Available__c}
+                                                            maximum-fraction-digits="2"
+                                                            style="margin-left: 4px;"></lightning-formatted-number>
+                                                        <span
+                                                            style="margin-left: 4px;">{item.Credit_Exposure_Currency__c}</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <br />
+                                            <br />
+                                            <div class="Subtitle slds-col slds-size_12-of-12">
+                                                <h1> <lightning-icon icon-name="utility:chevrondown"
+                                                        alternative-text="chevrondown" title="chevrondown"
+                                                        size="xx-small"
+                                                        style="margin-left: 8px;margin-right: 8px;"></lightning-icon>
+                                                    <strong>Additional Information</strong>
+                                                </h1>
+                                            </div>
+                                            <br />
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <li class="slds-col slds-size_6-of-12">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <span class="slds-form-element__label custom-label bold-text"
+                                                            style="margin-right: 0px;">
+                                                            Z2 Sales Employee：
+                                                        </span>
+                                                    </div>
+                                                    <span>{item.Inside_Sales__c}</span>
+                                                </li>
+                                                <li class="slds-col slds-size_6-of-12">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <span class="slds-form-element__label custom-label bold-text"
+                                                            style="margin-right: 0px;">
+                                                            CLA Number：
+                                                        </span>
+                                                    </div>
+                                                    <span>{item.CLA_Number__c}</span>
+                                                </li>
+                                            </ul>
+                                            <br />
+                                            <br />
+                                            <ul
+                                                class="slds-grid slds-wrap slds-col slds-size_12-of-12 slds-p-horizontal_medium">
+                                                <li class="slds-col slds-size_6-of-12">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <span class="slds-form-element__label custom-label bold-text"
+                                                            style="margin-right: 0px;">
+                                                            Internal Sales Note：
+                                                        </span>
+                                                    </div>
+                                                    <div style="padding-right: 10px;">
+                                                        <span>{item.Internal_Sales_Note__c}</span>
+                                                    </div>
+                                                </li>
+                                                <li class="slds-col slds-size_6-of-12">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <span class="slds-form-element__label custom-label bold-text"
+                                                            style="margin-right: 0px;">
+                                                            CLA Validity：
+                                                        </span>
+                                                    </div>
+                                                    <span>{item.claValidRange}</span>
+                                                </li>
+                                            </ul>
+                                            <br />
+                                        </ul>
+
+                                    </div>
+
+                                </template>
+
+
+                                <template if:false={isAccInfoShown}>
+                                    <div class="ndata">
+                                        <div class="slds-card__body slds-card__body_inner ">
+                                            <p>No Data</p>
+                                        </div>
+                                    </div>
+                                </template>
+                            </template>
+                            <template lwc:else>
+                                <div class="ndata">
+                                    <div class="slds-card__body slds-card__body_inner ">
+                                        <p>No Data</p>
+                                    </div>
+                                </div>
+
+                            </template>
+                        </div>
+                    </div>
+                </lightning-card>
+            </div>
+        </template>
+    </div>
+
+    <div id="ARInfos" class="slds-m-bottom_large">
+        <div class="slds-card__header slds-grid">
+            <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__figure">
+                    <lightning-icon data-section="arinfo" onclick={toggleSection} icon-name={arIconName}
+                        alternative-text="toggle" title="toggle" size="x-small"
+                        style="margin-left: 8px;margin-right: 8px;"></lightning-icon>
+                    <lightning-icon icon-name="custom:custom41" size="small" alternative-text="AR Info" title="AR Info">
+                    </lightning-icon>
+                    <span class="slds-assistive-text">AR Info</span>
+
+                </div>
+                <div class="slds-media__body slds-align-middle">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-truncate slds-m-right--xx-small" title="AR Info">AR Info</span>
+                    </h2>
+                </div>
+
+            </div>
+
+        </div>
+        <template if:true={sectionsExpanded.arinfo}>
+            <div class="slds-p-left_medium">
+                <lightning-card variant="Narrow">
+                    <div if:true={isARWait} class="slds-spinner_inline spinner-padding">
+                        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium">
+                        </lightning-spinner>
+                    </div>
+                    <div if:false={isARWait}>
+                        <template if:true={isARInfoShown}>
+                            <div>
+                                <div class="slds-card__body slds-card__body_inner ">
+                                    <div class="scrollable uiScrollerWrapper" style="max-height: 200px; ">
+                                        <table class="slds-table slds-table_cell-buffer slds-table_bordered"
+                                            style="table-layout: fixed; width: 100%; ">
+                                            <thead>
+                                                <tr class="slds-line-height_reset">
+                                                    <th>Billing No.</th>
+                                                    <th>Doc No.</th>
+                                                    <th>Amount</th>
+                                                    <th>Shipment Date</th>
+                                                    <th>Due Date</th>
+                                                    <th>Arrears</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="max-height: 160px; overflow-y: auto;">
+                                                <template for:each={sapArsList} for:item="aritem">
+                                                    <tr key={aritem.Id}>
+                                                        <td>{aritem.Billing_No__c}</td>
+                                                        <td>{aritem.Document_No__c}</td>
+                                                        <td>{aritem.formattedAmount}</td>
+                                                        <td>{aritem.Shipment_Date__c}</td>
+                                                        <td>{aritem.Due_Date__c}</td>
+                                                        <td class={aritem.cssClass}>{aritem.Arrears__c}
+                                                        </td>
+                                                        <td>{aritem.Status__c}</td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template if:false={isARInfoShown}>
+                            <div class="ndata">
+                                <div class="slds-card__body slds-card__body_inner ">
+                                    <p>No Data</p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </lightning-card>
+            </div>
+        </template>
+    </div>
+
+    <div id="OrderHeaders" class="slds-m-bottom_large">
+        <div class="slds-card__header slds-grid">
+            <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__figure">
+                    <lightning-icon data-section="odrinfo" onclick={toggleSection} icon-name={odrIconName}
+                        alternative-text="toggle" title="toggle" size="x-small"
+                        style="margin-left: 8px;margin-right: 8px;"></lightning-icon>
+                    <lightning-icon icon-name="custom:custom98" size="small" alternative-text="Order Tracking"
+                        title="Order Tracking">
+                    </lightning-icon>
+                    <span class="slds-assistive-text">Order Tracking</span>
+                </div>
+                <div class="slds-media__body slds-align-middle">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-truncate slds-m-right--xx-small" title="Order Tracking">Order
+                            Tracking<span style="position:relative; top:-4px;"><lightning-helptext
+                                    content="Only displays the lastest 10 records by the order date."></lightning-helptext></span></span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <template if:true={sectionsExpanded.odrinfo}>
+            <div class="slds-p-left_medium">
+                <lightning-card variant="Narrow">
+
+                    <div if:true={isOrdrWait} class="slds-spinner_inline spinner-padding">
+                        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium">
+                        </lightning-spinner>
+                    </div>
+                    <div if:false={isOrdrWait}>
+                        <template if:true={isOrderInfoShown}>
+                            <div class="slds-card__body slds-card__body_inner ">
+                                <div class="scrollable uiScrollerWrapper" style="max-height: 200px; ">
+                                    <table class="slds-table slds-table_cell-buffer slds-table_bordered"
+                                        style="table-layout: fixed; width: 100%; ">
+                                        <thead>
+                                            <tr class="slds-line-height_reset">
+                                                <th>SO#</th>
+                                                <th>PO#</th>
+                                                <th>Sales Code</th>
+                                                <th>Shipment Status</th>
+                                                <th>Order Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="max-height: 160px; overflow-y: auto;">
+                                            <template for:each={sapOHList} for:item="ohitem" for:index="index">
+                                                <tr id={ohitem.Id} key={ohitem.SO_Number__c}
+                                                    data-otherfield={ohitem.SO_Number__c}>
+                                                    <td class="row-data" onclick={handleRowClick}
+                                                        data-value={ohitem.SO_Number__c} style="width: 100px;"><a
+                                                            href="#">{ohitem.SO_Number__c}</a></td>
+                                                    <td>{ohitem.PO_Number__c}</td>
+                                                    <td>{ohitem.ExID__c}</td>
+                                                    <td>{ohitem.Status__c}</td>
+                                                    <td>{ohitem.Order_Date__c}</td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </template>
+                        <template if:false={isOrderInfoShown}>
+                            <div class="ndata">
+                                <div class="slds-card__body slds-card__body_inner ">
+                                    <p>No Data</p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </lightning-card>
+            </div>
+        </template>
+
+    </div>
+
+    <div id="Backlog" class="slds-m-bottom_large">
+        <div class="slds-card__header slds-grid slds-grid_align-spread">
+            <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__figure">
+                    <lightning-icon data-section="backloginfo" onclick={toggleSection} icon-name={backlogIconName}
+                        alternative-text="toggle" title="toggle" size="x-small"
+                        style="margin-left: 8px;margin-right: 8px;"></lightning-icon>
+                    <lightning-icon icon-name="standard:shipment" size="small" alternative-text="Backlog"
+                        title="Backlog">
+                    </lightning-icon>
+                    <span class="slds-assistive-text">Backlog</span>
+                </div>
+                <div class="slds-media__body slds-align-middle">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-truncate slds-m-right--xx-small" title="Backlog">Backlog<span
+                                style="position:relative; top:-4px;"><lightning-helptext
+                                    content="Retrieves SAP orders created or updated within the past three months, sorted by Line Item first and then Order Date, with a current limit of 100 records"></lightning-helptext></span></span>
+                    </h2>
+                </div>
+            </div>
+            <div if:true={isBacklogShown}>
+                <div style="display: flex; justify-content: flex-end;">
+                    <lightning-button-icon icon-name="utility:zoomin" variant="inverse" alternative-text="Zoom in"
+                        title="Zoom in" size="small" onclick={handleBacklogClick}></lightning-button-icon>
+                </div>
+            </div>
+        </div>
+        <template if:true={sectionsExpanded.backloginfo}>
+            <div class="slds-p-left_medium">
+                <lightning-card variant="Narrow">
+                    <div if:true={isOrdrWait} class="slds-spinner_inline spinner-padding">
+                        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium">
+                        </lightning-spinner>
+                    </div>
+                    <div if:false={isOrdrWait}>
+                        <template if:true={isBacklogShown}>
+                            <div class="slds-card__body slds-card__body_inner ">
+                                <div class="scrollable uiScrollerWrapper" style="max-height: 200px; ">
+                                    <table class="slds-table slds-table_cell-buffer slds-table_bordered"
+                                        style="table-layout: fixed; width: 100%; ">
+                                        <thead>
+                                            <tr class="slds-line-height_reset">
+                                                <th>SO#</th>
+                                                <th>PO#</th>
+                                                <th>Confirmed Date<span
+                                                        style="position:relative; top:-4px;"><lightning-helptext
+                                                            content="Effective Date"></lightning-helptext></span>
+                                                </th>
+                                                <th>Order Date</th>
+                                                <th>Product</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="max-height: 160px; overflow-y: auto;">
+                                            <template for:each={sapBList} for:item="ohitem" for:index="index">
+                                                <tr key={ohitem.Id}>
+                                                    <td>{ohitem.SO_Number__c}</td>
+                                                    <td>{ohitem.PO_Number__c}</td>
+                                                    <td>{ohitem.First_Date__c}</td>
+                                                    <td>{ohitem.Order_Date__c}</td>
+                                                    <td>{ohitem.Product_Name__c}</td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </template>
+                        <div>
+                            <template if:false={isBacklogShown}>
+                                <div class="ndata">
+                                    <div class="slds-card__body slds-card__body_inner ">
+                                        <p>No Data</p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </lightning-card>
+            </div>
+        </template>
+    </div>
+
+    <div id="Shipment" class="slds-m-bottom_large">
+        <div class="slds-card__header slds-grid slds-grid_align-spread">
+            <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__figure">
+                    <lightning-icon data-section="shipmentinfo" onclick={toggleSection} icon-name={shipmentIconName}
+                        alternative-text="toggle" title="toggle" size="x-small"
+                        style="margin-left: 8px;margin-right: 8px;"></lightning-icon>
+                    <lightning-icon icon-name="standard:shipment" size="small" alternative-text="Shipment"
+                        title="Shipment">
+                    </lightning-icon>
+                    <span class="slds-assistive-text">Shipment</span>
+
+                </div>
+                <div class="slds-media__body slds-align-middle">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-truncate slds-m-right--xx-small" title="Shipment">Shipment<span
+                                style="position:relative; top:-4px;"><lightning-helptext
+                                    content="Retrieves SAP orders created or updated within the past three months, sorted by Line Item first and then Order Date, with a current limit of 100 records"></lightning-helptext></span></span>
+                    </h2>
+                </div>
+            </div>
+            <div if:true={isShipmentShown}>
+                <div style="display: flex; justify-content: flex-end;">
+                    <lightning-button-icon icon-name="utility:zoomin" variant="inverse" alternative-text="Zoom in"
+                        title="Zoom in" size="small" onclick={handleShipmentClick}></lightning-button-icon>
+                </div>
+            </div>
+        </div>
+        <template if:true={sectionsExpanded.shipmentinfo}>
+            <div class="slds-p-left_medium">
+                <lightning-card variant="Narrow">
+                    <div if:true={isOrdrWait} class="slds-spinner_inline spinner-padding">
+                        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium">
+                        </lightning-spinner>
+                    </div>
+                    <div if:false={isOrdrWait}>
+                        <template if:true={isShipmentShown}>
+                            <div class="slds-card__body slds-card__body_inner ">
+                                <div class="scrollable uiScrollerWrapper" style="max-height: 200px; ">
+                                    <table class="slds-table slds-table_cell-buffer slds-table_bordered"
+                                        style="table-layout: fixed; width: 100%; ">
+                                        <thead>
+                                            <tr class="slds-line-height_reset">
+                                                <th>SO#</th>
+                                                <th>PO#</th>
+                                                <th>Effective Date</th>
+                                                <th>Order Date</th>
+                                                <th>Product</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="max-height: 160px; overflow-y: auto;">
+                                            <template for:each={sapSList} for:item="ohitem" for:index="index">
+                                                <tr key={ohitem.Id}>
+                                                    <td>{ohitem.SO_Number__c}</td>
+                                                    <td>{ohitem.PO_Number__c}</td>
+                                                    <td>{ohitem.First_Date__c}</td>
+                                                    <td>{ohitem.Order_Date__c}</td>
+                                                    <td>{ohitem.Product_Name__c}</td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </template>
+                        <template if:false={isShipmentShown}>
+                            <div class="ndata">
+                                <div class="slds-card__body slds-card__body_inner ">
+                                    <p>No Data</p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </lightning-card>
+            </div>
+        </template>
+
+    </div>
+</template>
